@@ -128,34 +128,34 @@
 - [x] Build reconciler with `localIntent ▷ preview ▷ truth` logic
 - [x] Test: Create object via Firestore, render on canvas (via subscriptions and optimistic insert helpers)
 
-#### 4. Canvas Rendering (0%)
-- [ ] Implement `CanvasStage.tsx` with Konva
-- [ ] Create `RectObject.tsx` component
-- [ ] Create `CircleObject.tsx` component
-- [ ] Wire up per-object selectors
-- [ ] Implement pan control (middle-mouse or space+drag)
-- [ ] Implement zoom control (scroll wheel)
-- [ ] Test: Objects render, pan/zoom work smoothly
+#### 4. Canvas Rendering (100% - ✅ COMPLETE)
+- [x] Implement `CanvasStage.tsx` with Konva
+- [x] Create `RectObject.tsx` component
+- [x] Create `CircleObject.tsx` component
+- [x] Wire up per-object selectors and `ObjectsLayer`
+- [x] Implement pan control (middle-mouse or space+drag)
+- [x] Implement zoom control (scroll wheel)
+- [x] Test: Objects render, pan/zoom work smoothly
 
-#### 5. Presence & Cursors (0%)
-- [ ] Implement RTDB presence publishing with `onDisconnect()`
-- [ ] Create cursor position broadcast (throttled)
-- [ ] Implement `PresenceLayer.tsx`
-- [ ] Render cursors with name labels
-- [ ] Assign stable colors to users
-- [ ] Test: Multi-user presence and cursors visible
+#### 5. Presence & Cursors (100% - ✅ COMPLETE)
+- [x] Implement RTDB presence publishing with `onDisconnect()`
+- [x] Cursor position broadcast (throttled ~50ms)
+- [x] Implement `PresenceLayer.tsx`
+- [x] Render cursors with display names; hide self; SVG pointer icon
+- [x] Assign stable colors per user (uid hash)
+- [x] Test: Multi-user presence and cursors visible
 
-#### 6. Single Object Interactions (0%)
-- [ ] Implement shape creation tools (rect, circle)
-- [ ] Build `useCanvasInteractions` hook
-- [ ] Implement selection system (click to select)
-- [ ] Add selection highlight/handles
-- [ ] Implement move transform with localIntent
-- [ ] Publish RTDB editing flag on pointerDown
-- [ ] Publish RTDB previews during pointerMove (throttled)
-- [ ] Commit to Firestore on pointerUp
-- [ ] Clear editing and preview signals
-- [ ] Test: Create, select, move shapes with smooth previews
+#### 6. Single Object Interactions (100% - ✅ COMPLETE)
+- [x] Implement shape creation tools (rect, circle)
+- [x] Build `useCanvasInteractions` hook
+- [x] Implement selection system (click to select)
+- [x] Add selection highlight (outlines); resize handles planned in Step 7
+- [x] Implement move transform with localIntent
+- [x] Publish RTDB editing flag on pointerDown
+- [x] Publish RTDB previews during pointerMove (throttled)
+- [x] Commit to Firestore on pointerUp
+- [x] Clear editing and preview signals
+- [x] Test: Create, select, move shapes with smooth previews
 
 #### 7. Resize & Delete (0%)
 - [ ] Add resize handles to selection
