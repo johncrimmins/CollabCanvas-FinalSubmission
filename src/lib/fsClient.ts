@@ -3,8 +3,10 @@ import {
   doc,
   onSnapshot,
   runTransaction,
+  writeBatch,
   serverTimestamp,
   setDoc,
+  type SnapshotOptions,
   type FirestoreError,
   type QuerySnapshot,
 } from "firebase/firestore";
@@ -15,7 +17,7 @@ import {
   parseCanvasObjectDoc,
   type CanvasObject,
 } from "@/lib/validators";
-import type { Unsubscribe } from "@/lib/rtdbClient";
+type Unsubscribe = () => void;
 
 export class CommitVersionMismatchError extends Error {
   constructor(public readonly currentVersion: number) {
@@ -86,6 +88,21 @@ export async function createObject({ canvasId, object }: CreateObjectOptions) {
   await setDoc(objectRef, { ...parsed.data, updatedAt: serverTimestamp() });
 }
 
+export interface DeleteObjectsOptions {
+  canvasId: string;
+  objectIds: string[];
+}
+
+export async function deleteObjects({ canvasId, objectIds }: DeleteObjectsOptions) {
+  if (!objectIds.length) return;
+  const batch = writeBatch(db);
+  for (const id of objectIds) {
+    const ref = doc(db, "canvases", canvasId, "objects", id);
+    batch.delete(ref);
+  }
+  await batch.commit();
+}
+
 export interface SubscribeObjectsOptions {
   canvasId: string;
   onChange: (objects: CanvasObject[]) => void;
@@ -102,9 +119,11 @@ export function subscribeObjects({
     collectionRef,
     (snapshot: QuerySnapshot) => {
       try {
-        const objects = snapshot.docs.map((docSnapshot) =>
-          canvasObjectSchema.parse({ id: docSnapshot.id, ...docSnapshot.data() })
-        );
+        const objects = snapshot.docs.map((docSnapshot) => {
+          const data = docSnapshot.data({ serverTimestamps: "estimate" } as SnapshotOptions);
+          // Use Timestamp-aware parser to normalize updatedAt → number (ms)
+          return parseCanvasObjectDoc(docSnapshot.id, data);
+        });
         onChange(objects);
       } catch (error) {
         console.error("Failed to parse canvas objects snapshot", error);

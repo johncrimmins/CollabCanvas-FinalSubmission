@@ -39,7 +39,6 @@
 * Keystroke-level text sync.
 * CRDTs or custom conflict resolution beyond per-object version checks.
 * AI features, layers panel, permissions management beyond owner + invited (unless clarified below).
-* Proactive diagnostics overlays/telemetry. Use DevTools; add diagnostics later if severe bugs require it.
 
 ---
 
@@ -215,10 +214,6 @@
 * Visible focus states and sufficient color contrast for labels and controls.
 
 ---
-
-## 8) Telemetry & Debugging Hooks
-
-* Out-of-scope initially. Use browser DevTools and ad-hoc logging as needed during development. Add targeted telemetry/diagnostics **retroactively** only if high-severity issues emerge that require deeper visibility.
 
 ---
 

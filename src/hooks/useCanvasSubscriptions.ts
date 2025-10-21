@@ -64,15 +64,19 @@ export function useCanvasSubscriptions(canvasId: string) {
     const u3 = subscribeEditing(canvasId, hydrateEditing);
     const u4 = subscribePreviews(canvasId, hydratePreviews);
 
-    const ttl = setInterval(() => pruneByTTL(800), 800);
+    const ttl = setInterval(() => pruneByTTL(600), 600);
 
     // publish my presence
     const u = auth.currentUser;
     if (u) {
+      // assign stable color from uid hash
+      const colors = ["#ef4444","#f59e0b","#10b981","#3b82f6","#8b5cf6","#ec4899"]; // red, amber, green, blue, violet, pink
+      let hash = 0; for (let i=0;i<u.uid.length;i++){ hash = ((hash<<5)-hash) + u.uid.charCodeAt(i); hash |= 0; }
+      const color = colors[Math.abs(hash) % colors.length];
       publishPresence(canvasId, u.uid, {
         userId: u.uid,
         name: u.displayName || u.email || "User",
-        color: "#3b82f6",
+        color,
         at: Date.now(),
       });
     }

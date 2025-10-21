@@ -1,8 +1,8 @@
 # CollabCanvas — Progress Tracker
 
 ## Phase
-- Current: Phase 1 — Core Collaborative Canvas
-- Next: Phase 1 Step 7 (Resize & Delete)
+- Current: Phase 1 — Core Collaborative Canvas (Tasks 3–7 active)
+- Next: Phase 1 Step 7 (Resize handles) and duplicate
 
 ## What’s Done (Highlights)
 - Project setup & Auth (Next.js 15, TS, Tailwind, shadcn/ui, Firebase) — 100%
@@ -12,6 +12,9 @@
 - ObjectsLayer + components (`RectObject`, `CircleObject`) — 100%
 - Presence & cursors (RTDB): publish presence, subscribe presence/cursors/editing/previews, TTL prune — 100%
 - Interactions: toolbar tool state, click-to-create (rect/circle), select and move with localIntent ▷ RTDB previews ▷ Firestore commit — 100%
+- Delete selected shapes via Delete/Backspace — 100%
+- Selection outlines for rect/circle — 100%
+- Cursor polish: 50ms throttle, hide self, SVG pointer, stable color, displayName — 100%
 
 ## Phase 1 Task Checklist
 1) Project Setup & Authentication — ✅
@@ -21,10 +24,10 @@
    - Konva stage sizing, pan/zoom; per-object components/selectors
 5) Presence & Cursors — ✅
    - RTDB presence with onDisconnect; cursors/editing/previews subscriptions; TTL prune
-6) Single Object Interactions — ✅ (move)
+6) Single Object Interactions — ✅ (move + delete)
    - Tools: select/rectangle/circle; click-to-create; select+drag → preview; commit on end
-   - Note: resize/duplicate/delete to be implemented in Step 7
-7) Resize & Delete — ⏳ next
+   - Delete wired to Delete/Backspace; selection outlines
+7) Resize & Duplicate — ⏳ next
 8) Undo/Redo — pending
 9) Toolbar & Polish — partial (tool state wired)
 10) Reconnection & Edge Cases — pending
@@ -37,11 +40,11 @@
 - Reload restores saved state — baseline via Firestore truth ✅
 
 ## Known Notes
-- Preview throttle/TTL values may need tuning after Step 7.
+- Preview throttle now 50ms; TTL prune 600ms — may tune further.
 - Large selection fan-out strategies are Phase 2.
 
 ## Next Actions
-- Implement Step 7 (Resize & Delete): resize handles + delete/duplicate with preview + safety prompt >25 objs.
+- Implement Step 7 (Resize & Duplicate): resize handles + duplicate with preview; safety prompt >25 objs.
 - Add keyboard shortcuts and begin undo/redo slice.
 
 ## Links

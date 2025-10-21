@@ -2,7 +2,7 @@
 
 import { useCallback, useRef } from "react";
 import { useCanvasStore } from "@/store";
-import { createObject, commitObject } from "@/lib/fsClient";
+import { createObject, commitObject, deleteObjects } from "@/lib/fsClient";
 import { publishEditing, publishPreview } from "@/lib/rtdbClient";
 import { generateObjectId } from "@/lib/utils";
 import type { CanvasObject } from "@/lib/types";
@@ -14,6 +14,7 @@ export function useCanvasInteractions(canvasId: string, userId: string) {
   const setTool = useCanvasStore((s) => s.setTool);
   const tool = useCanvasStore((s) => s.tool);
   const setSelectedIds = useCanvasStore((s) => s.setSelectedIds);
+  const selectedIds = useCanvasStore((s) => s.selectedIds);
   const beginLocalIntent = useCanvasStore((s) => s.beginLocalIntent);
   const updateLocalIntent = useCanvasStore((s) => s.updateLocalIntent);
   const endLocalIntent = useCanvasStore((s) => s.endLocalIntent);
@@ -113,7 +114,24 @@ export function useCanvasInteractions(canvasId: string, userId: string) {
     } as const;
   }, [beginLocalIntent, canvasId, endLocalIntent, tool, updateLocalIntent, userId]);
 
-  return { createRect, createCircle, getObjectHandlers } as const;
+  const onDeleteSelected = useCallback(async () => {
+    if (!selectedIds.length) return;
+    try {
+      await deleteObjects({ canvasId, objectIds: selectedIds });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("deleteObjects failed", err);
+    }
+  }, [canvasId, selectedIds]);
+
+  // Keyboard delete helper: caller should wire this to keydown
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === "Delete" || e.key === "Backspace") {
+      void onDeleteSelected();
+    }
+  }, [onDeleteSelected]);
+
+  return { createRect, createCircle, getObjectHandlers, onDeleteSelected, handleKeyDown } as const;
 }
 
 

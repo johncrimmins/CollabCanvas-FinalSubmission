@@ -9,9 +9,11 @@ import { CircleObject } from "@/components/CircleObject";
 import { useCanvasInteractions } from "@/hooks/useCanvasInteractions";
 import { useCanvasId } from "@/context/CanvasContext";
 import { auth } from "@/lib/firebase";
+import { Rect } from "react-konva";
 
 function ObjectRenderer({ id }: { id: string }) {
   const object = useCanvasStore((s) => s.objects[id]);
+  const selectedIds = useCanvasStore((s) => s.selectedIds);
   const localIntent = useCanvasStore((s) => s.localIntent);
   const previews = useCanvasStore((s) => s.previews);
   const canvasId = useCanvasId();
@@ -30,13 +32,36 @@ function ObjectRenderer({ id }: { id: string }) {
 
 export function ObjectsLayer() {
   const objects = useCanvasStore((s) => s.objects);
+  const selectedIds = useCanvasStore((s) => s.selectedIds);
   const ids = useMemo(() => Object.keys(objects), [objects]);
   return (
     <Layer>
-      <Group listening={false}>
+      <Group listening={true}>
         {ids.map((id) => (
           <ObjectRenderer key={id} id={id} />
         ))}
+        {/* selection overlay rectangles */}
+        {ids.map((id) => {
+          const obj = objects[id];
+          const isSelected = selectedIds.includes(id);
+          if (!isSelected || !obj) return null;
+          const props = obj.props;
+          const w = obj.type === "circle" ? (props.r ?? 40) * 2 : (props.w ?? 100);
+          const h = obj.type === "circle" ? (props.r ?? 40) * 2 : (props.h ?? 80);
+          return (
+            <Rect
+              key={`sel-${id}`}
+              x={props.x - 4}
+              y={props.y - 4}
+              width={w + 8}
+              height={h + 8}
+              strokeDash={[6, 4]}
+              stroke={"#0ea5e9"}
+              strokeWidth={1.5}
+              listening={false}
+            />
+          );
+        })}
       </Group>
     </Layer>
   );

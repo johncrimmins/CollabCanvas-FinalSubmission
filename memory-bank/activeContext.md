@@ -1,6 +1,6 @@
 # CollabCanvas — Active Context
 
-## Current Phase: Phase 1 Implementation - Task 1 Complete → Task 2 Next
+## Current Phase: Phase 1 — Core Collaborative Canvas (Tasks 3–7 in progress)
 
 ### Status
 This is the **Gauntlet Final Submission (v5)** of CollabCanvas. Project setup and authentication are complete:
@@ -10,20 +10,20 @@ This is the **Gauntlet Final Submission (v5)** of CollabCanvas. Project setup an
 - ✅ Memory Bank initialized
 - ✅ **Task 1: Project Setup & Authentication COMPLETE**
 
-**Next Step**: Task 2 - Canvas Page Infrastructure (Canvas Page Shell)
+**Current Focus**: Task 6–7 — Single object interactions (selection/move) and Delete; preparing Resize
 
 ## Current Work Focus
 
 ### Immediate Priority
-**Phase 1: Core Collaborative Canvas — Begin Task 2 (Canvas Page Shell)**
+**Phase 1: Core Collaborative Canvas** — stabilize the core loop (create → select → move → preview → commit → delete) and prepare resize handles.
 
-This phase will establish the foundational collaborative features:
+This phase establishes the foundational collaborative features:
 1. Authentication system (Email/Password + Google)
 2. Canvas page infrastructure with providers
 3. Presence & cursor system via RTDB
 4. Basic shape creation (rectangle, circle)
-5. Single-select and transform operations (move, resize)
-6. Delete and duplicate functionality
+5. Single-select and transform operations (move now, resize next)
+6. Delete (done) and duplicate (next) functionality
 7. RTDB preview system during transforms
 8. Firestore commit on gesture end
 9. Reconnection behavior with `onDisconnect()` cleanup
@@ -104,31 +104,24 @@ Following the principle of building foundation first:
 - Test: All acceptance criteria from PRD Phase 1 pass
 
 ## Recent Changes
-- ✅ **Completed Task 1: Project Setup & Authentication** (67/67 sub-tasks)
-- ✅ Initialized Next.js 15 with TypeScript, Tailwind, shadcn/ui
-- ✅ Implemented full authentication system (Email/Password + Google OAuth)
-- ✅ Created auth guards and protected routes
-- ✅ Built dashboard with Create/Join canvas functionality
-- ✅ Created placeholder canvas route
-- ✅ Added error handling for missing Firebase configuration
-- ✅ All builds successful, no linter errors
-- ✅ Premium UI aesthetic implemented throughout
-- ✅ Comprehensive documentation created (README, setup guides, testing guide)
+- ✅ Fixed Firestore snapshot parsing: handle `updatedAt` Timestamps and nulls via `serverTimestamps: "estimate"` + Zod preprocess
+- ✅ Fixed selection not working: enabled pointer events on objects layer; added selection outlines
+- ✅ Implemented Delete: Delete/Backspace removes selected shapes (batched write); reconciler replaces objects map on snapshot
+- ✅ Cursor polish: throttle ~50ms, hide self, SVG cursor, stable color by uid hash, label shows displayName
+- ✅ Preview safety: null-guarded preview props in `PresenceLayer`
+- ✅ Profile menu: top-right quick access to hub and sign-out
 
 ## Next Steps
 
-### Immediate (Next Session)
-1. Begin Task 3: Basic Object System (Firestore integration)
-   - Define canvas object schema/types and validators
-   - Implement Firestore commit helper and subscription pipeline
-   - Build reconciler logic for `localIntent ▷ preview ▷ truth`
-   - Test: Create object via Firestore and see it mirror in store
+### Immediate
+1. Resize handles for selected objects (Konva Transformer), with RTDB previews and FS commit on end
+2. Duplicate action (toolbar + hotkey)
+3. Error toasts on write failures per PRD
 
 ### Near-Term (Phase 1 Continuation)
-1. Task 3: Basic Object System (Firestore integration)
-2. Task 4: Canvas Rendering (Konva.js)
-3. Task 5: Presence & Cursors (RTDB)
-4. Tasks 6-10: Interactions, undo/redo, polish, testing
+1. Undo/redo (local) and keyboard shortcuts
+2. Reconnection/TTL edge-case tests and polish
+3. Rotation handles (Phase 2)
 
 ## Active Decisions & Considerations
 

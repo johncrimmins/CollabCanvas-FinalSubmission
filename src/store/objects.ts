@@ -16,6 +16,15 @@ export const createObjectsSlice: StateCreator<
       }
     });
   },
+  setAll: (objects) => {
+    set((state) => {
+      const next: Record<string, typeof state.objects[string]> = {};
+      for (const object of objects) {
+        next[object.id] = object;
+      }
+      state.objects = next;
+    });
+  },
   removeMany: (ids) => {
     if (!ids.length) return;
     set((state) => {

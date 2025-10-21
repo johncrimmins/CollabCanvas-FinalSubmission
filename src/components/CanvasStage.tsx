@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { useCanvasStore } from "@/store";
 import { useCanvasId } from "@/context/CanvasContext";
 import { auth } from "@/lib/firebase";
+import { publishCursor } from "@/lib/rtdbClient";
 import { useCanvasInteractions } from "@/hooks/useCanvasInteractions";
 
 export interface CanvasStageProps {
@@ -55,6 +56,12 @@ export function CanvasStage({
     [onStageRef]
   );
 
+  // Canvas identity and user context
+  const canvasId = useCanvasId();
+  const userId = auth.currentUser?.uid || "anon";
+  const tool = useCanvasStore((s) => s.tool);
+  const { createRect, createCircle } = useCanvasInteractions(canvasId, userId);
+
   // Pan & Zoom state
   const stagePos = useCanvasStore((s) => s.stagePos);
   const stageScale = useCanvasStore((s) => s.stageScale);
@@ -62,6 +69,18 @@ export function CanvasStage({
   const isSpaceDownRef = useRef(false);
   const isPanningRef = useRef(false);
   const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
+
+  // Wire Delete/Backspace using a stable handler from the existing hook to avoid invalid hook usage
+  const { onDeleteSelected } = useCanvasInteractions(canvasId, userId);
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Delete" || e.key === "Backspace") {
+        void onDeleteSelected();
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onDeleteSelected]);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -113,16 +132,26 @@ export function CanvasStage({
     }
   }, []);
 
+  // Throttled cursor publisher
+  const lastCursorTsRef = useRef<number>(0);
   const handleMouseMove = useCallback(() => {
-    if (!isPanningRef.current) return;
     const stage = stageRef.current;
     const p = stage?.getPointerPosition();
+    const now = Date.now();
+    if (p && canvasId && userId) {
+      // publish at ~50ms under motion
+      if (now - lastCursorTsRef.current > 50) {
+        lastCursorTsRef.current = now;
+        publishCursor(canvasId, userId, { userId, x: p.x, y: p.y, tool, at: now });
+      }
+    }
+    if (!isPanningRef.current) return;
     if (!p || !lastPointerRef.current) return;
     const dx = p.x - lastPointerRef.current.x;
     const dy = p.y - lastPointerRef.current.y;
     lastPointerRef.current = { x: p.x, y: p.y };
     setStageTransform({ x: stagePos.x + dx, y: stagePos.y + dy }, stageScale);
-  }, [setStageTransform, stagePos.x, stagePos.y, stageScale]);
+  }, [canvasId, setStageTransform, stagePos.x, stagePos.y, stageScale, tool, userId]);
 
   const endPan = useCallback(() => {
     isPanningRef.current = false;
@@ -130,12 +159,6 @@ export function CanvasStage({
   }, []);
 
   const cursorClass = isPanningRef.current || isSpaceDownRef.current ? "cursor-grabbing" : "cursor-default";
-
-  // Click-to-create when tool is a creation tool
-  const canvasId = useCanvasId();
-  const userId = auth.currentUser?.uid || "anon";
-  const { createRect, createCircle } = useCanvasInteractions(canvasId, userId);
-  const tool = useCanvasStore((s) => s.tool);
 
   const handleStageClick = useCallback(() => {
     if (tool === "rectangle" || tool === "circle") {

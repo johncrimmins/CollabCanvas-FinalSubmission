@@ -54,6 +54,7 @@ export interface PatchBundle {
 export interface ObjectsSlice {
   objects: Record<string, CanvasObject>;
   upsertMany: (objects: CanvasObject[]) => void;
+  setAll: (objects: CanvasObject[]) => void;
   removeMany: (ids: string[]) => void;
   resetObjects: () => void;
 }

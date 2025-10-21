@@ -53,7 +53,8 @@ export function applyFirestoreSnapshot(
   state: CanvasStoreState,
   objects: CanvasObject[]
 ) {
-  state.upsertMany(objects);
+  // Replace objects map to reflect deletions
+  state.setAll(objects);
 }
 
 export function transformIntentOnTruth(

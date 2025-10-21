@@ -50,7 +50,8 @@ export const canvasObjectPatchSchema = canvasObjectPropsSchema.partial();
 export type CanvasObjectPatch = z.infer<typeof canvasObjectPatchSchema>;
 
 export const canvasObjectDocSchema = canvasObjectSchema.extend({
-  updatedAt: firestoreTimestampSchema,
+  // Accept Timestamp, number, or null/undefined (map null→Date.now() via preprocess)
+  updatedAt: z.preprocess((v) => (v == null ? Date.now() : v), firestoreTimestampSchema),
 }).partial({ id: true });
 
 export class CanvasObjectValidationError extends Error {
@@ -61,13 +62,18 @@ export class CanvasObjectValidationError extends Error {
 }
 
 export function parseCanvasObjectDoc(id: string, data: unknown): CanvasObject {
-  const result = canvasObjectDocSchema.safeParse({ ...data, id });
+  if (data == null || typeof data !== "object") {
+    throw new CanvasObjectValidationError(
+      `Invalid canvas object data for ${id}: expected object`
+    );
+  }
+  const result = canvasObjectDocSchema.safeParse({ ...(data as Record<string, unknown>), id });
   if (!result.success) {
     throw new CanvasObjectValidationError(
       `Invalid canvas object data for ${id}: ${result.error.message}`
     );
   }
-  return result.data;
+  return result.data as CanvasObject;
 }
 
 

@@ -84,7 +84,7 @@ src/
     ui.ts                             // tool, selection, draftTextById, localIntent
     presence.ts                       // RTDB mirrors
     undo.ts                           // local undo/redo (immer patches, optional persist)
-    index.ts                          // create store; combine slices; devtools
+    index.ts                          // create store; combine slices
 ```
 
 ---
