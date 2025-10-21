@@ -8,7 +8,6 @@ import { CanvasStage } from "@/components/CanvasStage";
 import { PresenceLayer } from "@/components/PresenceLayer";
 import { ConnectionIndicator } from "@/components/ConnectionIndicator";
 import { useCanvasConnectionStatus } from "@/hooks/useCanvasConnectionStatus";
-import { CanvasDiagnosticsRunner } from "@/components/layout/CanvasDiagnosticsRunner";
 import { CanvasSubscriptions } from "@/components/layout/CanvasSubscriptions";
 
 export default function CanvasPage() {

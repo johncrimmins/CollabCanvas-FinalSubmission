@@ -1,5 +1,5 @@
 import { type StateCreator } from "zustand";
-import type { CanvasStoreState, PatchBundle, UndoSlice } from "@/store/types";
+import type { CanvasOperation, CanvasStoreState, UndoSlice } from "@/store/types";
 
 export const MAX_HISTORY = 100;
 
@@ -8,14 +8,14 @@ export const createUndoSlice: StateCreator<
   [["zustand/immer", never]],
   [],
   UndoSlice
-> = (set) => ({
+> = (set, get) => ({
   history: [],
   pointer: -1,
-  push: (bundle: PatchBundle) => {
+  push: (operation: CanvasOperation) => {
     set((state) => {
       const nextPointer = state.pointer + 1;
       state.history = state.history.slice(0, nextPointer);
-      state.history.push(bundle);
+      state.history.push(operation);
       if (state.history.length > MAX_HISTORY) {
         state.history.shift();
       }
@@ -23,31 +23,25 @@ export const createUndoSlice: StateCreator<
     });
   },
   undo: () => {
-    let snapshot: PatchBundle | null = null;
+    let operation: CanvasOperation | null = null;
     set((state) => {
       if (state.pointer < 0) return;
-      const bundle = state.history[state.pointer];
-      snapshot = {
-        patches: bundle.patches.slice(),
-        inversePatches: bundle.inversePatches.slice(),
-      };
+      operation = state.history[state.pointer];
       state.pointer -= 1;
     });
-    return snapshot;
+    return operation;
   },
   redo: () => {
-    let snapshot: PatchBundle | null = null;
+    let operation: CanvasOperation | null = null;
     set((state) => {
       if (state.pointer >= state.history.length - 1) return;
       state.pointer += 1;
-      const bundle = state.history[state.pointer];
-      snapshot = {
-        patches: bundle.patches.slice(),
-        inversePatches: bundle.inversePatches.slice(),
-      };
+      operation = state.history[state.pointer];
     });
-    return snapshot;
+    return operation;
   },
+  canUndo: () => get().pointer >= 0,
+  canRedo: () => get().pointer < get().history.length - 1,
   clearHistory: () => set({ history: [], pointer: -1 }),
 });
 

@@ -9,7 +9,7 @@ import { useCanvasStore } from "@/store";
 import { useCanvasId } from "@/context/CanvasContext";
 import { auth } from "@/lib/firebase";
 import { publishCursor } from "@/lib/rtdbClient";
-import { useCanvasInteractions } from "@/hooks/useCanvasInteractions";
+import { useCanvasInteractionsContext } from "@/context/CanvasInteractionsContext";
 
 export interface CanvasStageProps {
   children?: React.ReactNode;
@@ -60,7 +60,7 @@ export function CanvasStage({
   const canvasId = useCanvasId();
   const userId = auth.currentUser?.uid || "anon";
   const tool = useCanvasStore((s) => s.tool);
-  const { createRect, createCircle } = useCanvasInteractions(canvasId, userId);
+  const { createRect, createCircle, handleKeyDown } = useCanvasInteractionsContext();
 
   // Pan & Zoom state
   const stagePos = useCanvasStore((s) => s.stagePos);
@@ -70,17 +70,10 @@ export function CanvasStage({
   const isPanningRef = useRef(false);
   const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
 
-  // Wire Delete/Backspace using a stable handler from the existing hook to avoid invalid hook usage
-  const { onDeleteSelected } = useCanvasInteractions(canvasId, userId);
   useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Delete" || e.key === "Backspace") {
-        void onDeleteSelected();
-      }
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onDeleteSelected]);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {

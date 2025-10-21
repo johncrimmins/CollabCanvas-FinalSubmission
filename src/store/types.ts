@@ -1,4 +1,3 @@
-import type { Patch } from "immer";
 import type { CanvasObject } from "@/lib/types";
 
 export type CanvasTool = "select" | "rectangle" | "circle" | "text";
@@ -46,11 +45,6 @@ export interface PreviewStateEntry {
 
 export type PreviewState = Record<string, PreviewStateEntry>;
 
-export interface PatchBundle {
-  patches: Patch[];
-  inversePatches: Patch[];
-}
-
 export interface ObjectsSlice {
   objects: Record<string, CanvasObject>;
   upsertMany: (objects: CanvasObject[]) => void;
@@ -92,13 +86,26 @@ export interface PresenceSlice {
   resetPresence: () => void;
 }
 
+export interface UpdateOperationEntry {
+  id: string;
+  before: Partial<CanvasObject["props"]>;
+  after: Partial<CanvasObject["props"]>;
+}
+
+export type CanvasOperation =
+  | { type: "create"; objects: CanvasObject[] }
+  | { type: "delete"; objects: CanvasObject[] }
+  | { type: "update"; entries: UpdateOperationEntry[] };
+
 export interface UndoSlice {
-  history: PatchBundle[];
+  history: CanvasOperation[];
   pointer: number;
-  push: (bundle: PatchBundle) => void;
-  undo: () => PatchBundle | null;
-  redo: () => PatchBundle | null;
+  push: (operation: CanvasOperation) => void;
+  undo: () => CanvasOperation | null;
+  redo: () => CanvasOperation | null;
   clearHistory: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
 }
 
 export type CanvasStoreState = ObjectsSlice & UISlice & PresenceSlice & UndoSlice;
