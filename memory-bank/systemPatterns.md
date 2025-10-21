@@ -83,6 +83,11 @@ src/
     CanvasStage.tsx           # Konva Stage/Layers
     PresenceLayer.tsx         # Cursors + name labels
     Toolbar.tsx               # Tool selection
+    layout/                   # Shared layout surfaces, fallbacks, wrappers
+      AuthLoadingScreen.tsx
+      AuthErrorScreen.tsx
+      ProtectedAppShell.tsx
+      ErrorNotice.tsx
     TextEditor.tsx            # Inline text editor
   
   hooks/                      # Reusable logic
@@ -113,6 +118,7 @@ src/
 - **Components**: Pure presentation; read from store via selectors
 - **Hooks**: Business logic and side effects
 - **Lib**: Stateless utilities and API clients
+- **Layout components**: Encapsulate loading/error UI, shells, and wrappers using shadcn primitives (no inline GSX fallbacks)
 
 #### Why This Matters
 - Pages remain lightweight and understandable
@@ -240,6 +246,21 @@ sequenceDiagram
 - Use Zustand selectors to subscribe only to relevant slice of state
 - Each Konva object component selects only its own render props
 - Avoids full canvas re-render on every state change
+- Shared layout surfaces (loading/error/shell) live under `components/layout` and are reused across routes. Inline fallback JSX in routes/layouts is prohibited; wrap with shadcn/ui components for consistency.
+
+### Pattern: Reusable Fallback Surfaces (shadcn/ui)
+- Never inline fallback UIs in pages or route layouts; use components under `components/layout/`
+- Compose fallbacks from shadcn/ui primitives (`Card`, `Button`, `Toaster`) for consistency
+- Example: `(app)/layout.tsx` should render `<AuthLoadingScreen/>` or `<AuthErrorScreen/>`, not raw JSX
+
+### Pattern: Canvas Stage Composition
+- Use `react-konva` `Stage` + `Layer` and render children via selectors
+- `CanvasStage` accepts `onStageRef`, optional `width`/`height`, and overlays a placeholder when empty
+- Keep Stage-level `listening` minimized; delegate interaction to object components and hooks
+
+### Pattern: Diagnostics (Dev-only)
+- Provide `useCanvasDiagnostics(canvasId)` and an optional `CanvasDiagnosticsPanel` for store snapshots
+- Show diagnostics in a pointer-events-none container over the canvas shell; hide in production builds
 
 ### Pattern: Adaptive Throttling
 - Default preview throttle: 80-120ms

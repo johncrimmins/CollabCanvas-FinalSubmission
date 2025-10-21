@@ -63,7 +63,7 @@
 - ✅ Feature PRD Created
   - `tasks/prd-01-project-setup-authentication.md` - Phase 1, Task 1 detailed requirements
 
-## Phase 1: Core Collaborative Canvas (NOT STARTED)
+## Phase 1: Core Collaborative Canvas (IN PROGRESS)
 
 ### Scope
 - [ ] Authentication system (Email/Password + Google)
@@ -96,11 +96,12 @@
 - [x] Create comprehensive documentation (README, setup guides, testing guide)
 - [x] Handle missing Firebase config with helpful error messages
 
-#### 2. Canvas Page Shell (0%)
-- [ ] Create app layout with providers
-- [ ] Create canvas route `/canvases/[canvasId]`
-- [ ] Initialize Zustand store structure
-- [ ] Create store slices: objects, ui, presence, undo
+#### 2. Canvas Page Shell (In Progress)
+- [x] Create app layout with providers (refactored to use reusable layout components)
+- [x] Create canvas route `/canvases/[canvasId]`
+- [x] Initialize Zustand store structure
+- [x] Create store slices: objects, ui, presence, undo
+- [x] Set up reusable layout components (`AuthLoadingScreen`, `AuthErrorScreen`, `ProtectedAppShell`, `ErrorNotice`)
 - [ ] Set up Firebase client wrappers (fsClient, rtdbClient)
 - [ ] Test: Canvas page loads, Firebase connects
 

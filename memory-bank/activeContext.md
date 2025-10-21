@@ -1,6 +1,6 @@
 # CollabCanvas — Active Context
 
-## Current Phase: Phase 1 Implementation - Task 1 Complete
+## Current Phase: Phase 1 Implementation - Task 1 Complete → Task 2 Next
 
 ### Status
 This is the **Gauntlet Final Submission (v5)** of CollabCanvas. Project setup and authentication are complete:
@@ -10,12 +10,12 @@ This is the **Gauntlet Final Submission (v5)** of CollabCanvas. Project setup an
 - ✅ Memory Bank initialized
 - ✅ **Task 1: Project Setup & Authentication COMPLETE**
 
-**Next Step**: Task 2 - Canvas Page Infrastructure
+**Next Step**: Task 2 - Canvas Page Infrastructure (Canvas Page Shell)
 
 ## Current Work Focus
 
 ### Immediate Priority
-**Phase 1: Core Collaborative Canvas**
+**Phase 1: Core Collaborative Canvas — Begin Task 2 (Canvas Page Shell)**
 
 This phase will establish the foundational collaborative features:
 1. Authentication system (Email/Password + Google)
@@ -184,4 +184,6 @@ From PRD acceptance criteria:
 2. Any specific concerns about the documented architecture?
 3. Is the Firebase project already set up, or should we include those setup steps?
 4. What's the target timeline for Phase 1 completion?
+
+- Layout components (loading/error/shell) now live under `src/components/layout/` and must be reused instead of embedding raw Tailwind/JSX fallbacks in routes or layouts.
 
