@@ -1,3 +1,4 @@
+// src/store/undo.ts - Zustand slice for local undo/redo functionality and history management.
 import { type StateCreator } from "zustand";
 import type { CanvasOperation, CanvasStoreState, UndoSlice } from "@/store/types";
 

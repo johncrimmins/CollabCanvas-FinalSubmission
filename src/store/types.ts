@@ -1,3 +1,4 @@
+// src/store/types.ts - TypeScript type definitions for all Zustand store slices and operations.
 import type { CanvasObject } from "@/lib/types";
 
 export type CanvasTool = "select" | "rectangle" | "circle" | "text";
@@ -106,6 +107,17 @@ export interface UndoSlice {
   clearHistory: () => void;
   canUndo: () => boolean;
   canRedo: () => boolean;
+}
+
+export interface Patch {
+  op: "replace" | "remove" | "add";
+  path: string[];
+  value?: any;
+}
+
+export interface PatchBundle {
+  patches: Patch[];
+  inversePatches: Patch[];
 }
 
 export type CanvasStoreState = ObjectsSlice & UISlice & PresenceSlice & UndoSlice;

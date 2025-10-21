@@ -1,3 +1,4 @@
+// src/store/index.ts - Main Zustand store setup, provider, and hook for canvas state management.
 "use client";
 
 import { createContext, useContext, useRef, createElement } from "react";
@@ -54,7 +55,7 @@ export function useCanvasStore<T>(
   if (!store) {
     throw new Error("useCanvasStore must be used within a CanvasStoreProvider");
   }
-  return useStore(store, selector, equalityFn);
+  return useStore(store, selector);
 }
 
 export { createCanvasStore };

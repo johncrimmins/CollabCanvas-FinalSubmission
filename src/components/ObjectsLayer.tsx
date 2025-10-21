@@ -8,6 +8,7 @@ import { RectObject } from "@/components/RectObject";
 import { CircleObject } from "@/components/CircleObject";
 import { useCanvasId } from "@/context/CanvasContext";
 import { useCanvasInteractionsContext } from "@/context/CanvasInteractionsContext";
+import type { CanvasObject } from "@/lib/types";
 
 // Dynamic imports for Konva components to avoid SSR issues
 const KonvaLayer = dynamic(() => import("react-konva").then(mod => ({ default: mod.Layer })), { ssr: false });
@@ -114,7 +115,7 @@ export function ObjectsLayer() {
     const obj = state.objects[id];
     if (!obj) return;
     const latest = state.localIntent[id]?.props || {};
-    await endTransform(id, [obj], { [id]: latest });
+    await endTransform(id, [obj]);
   };
   return (
     <KonvaLayer>

@@ -1,3 +1,4 @@
+// src/store/objects.ts - Zustand slice for managing canvas objects (CRUD operations and state).
 import { type StateCreator } from "zustand";
 import type { CanvasStoreState, ObjectsSlice } from "@/store/types";
 

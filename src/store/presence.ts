@@ -1,3 +1,4 @@
+// src/store/presence.ts - Zustand slice for real-time presence, cursors, editing, and previews.
 import { type StateCreator } from "zustand";
 import type {
   CanvasStoreState,

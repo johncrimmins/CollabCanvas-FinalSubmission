@@ -5,7 +5,6 @@ import {
   set,
   remove,
   type DatabaseReference,
-  type DatabaseError,
 } from "firebase/database";
 import { rtdb } from "@/lib/firebase";
 import type {
@@ -80,7 +79,7 @@ export function publishPreview(
 function subscribeScoped<T>(
   path: string,
   onChange: (value: T) => void,
-  onError?: (error: DatabaseError) => void
+  onError?: (error: Error) => void
 ): Unsubscribe {
   const target = scopedRef(path);
   return onValue(
@@ -95,7 +94,7 @@ function subscribeScoped<T>(
 export function subscribePresence(
   canvasId: string,
   onChange: (peers: Record<string, PeerPresence>) => void,
-  onError?: (error: DatabaseError) => void
+  onError?: (error: Error) => void
 ): Unsubscribe {
   return subscribeScoped(`canvases/${canvasId}/presence`, onChange, onError);
 }
@@ -103,7 +102,7 @@ export function subscribePresence(
 export function subscribeCursors(
   canvasId: string,
   onChange: (cursors: Record<string, CursorState>) => void,
-  onError?: (error: DatabaseError) => void
+  onError?: (error: Error) => void
 ): Unsubscribe {
   return subscribeScoped(`canvases/${canvasId}/cursors`, onChange, onError);
 }
@@ -111,7 +110,7 @@ export function subscribeCursors(
 export function subscribeEditing(
   canvasId: string,
   onChange: (editing: EditingState) => void,
-  onError?: (error: DatabaseError) => void
+  onError?: (error: Error) => void
 ): Unsubscribe {
   return subscribeScoped(`canvases/${canvasId}/editing`, onChange, onError);
 }
@@ -119,7 +118,7 @@ export function subscribeEditing(
 export function subscribePreviews(
   canvasId: string,
   onChange: (previews: PreviewState) => void,
-  onError?: (error: DatabaseError) => void
+  onError?: (error: Error) => void
 ): Unsubscribe {
   return subscribeScoped(`canvases/${canvasId}/previews`, onChange, onError);
 }

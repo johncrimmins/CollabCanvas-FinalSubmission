@@ -22,9 +22,7 @@ const nextConfig: NextConfig = {
   },
 
   // Mark Konva packages as external to server components to prevent SSR issues
-  experimental: {
-    serverComponentsExternalPackages: ['konva', 'react-konva'],
-  },
+  serverExternalPackages: ['konva', 'react-konva'],
 
   // Optimize for production
   swcMinify: true,

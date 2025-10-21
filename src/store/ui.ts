@@ -1,3 +1,4 @@
+// src/store/ui.ts - Zustand slice for UI state (tools, selections, local intent, and drafts).
 import { type StateCreator } from "zustand";
 import type {
   CanvasStoreState,

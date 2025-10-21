@@ -82,7 +82,7 @@ export function useUndoManager(): UndoManagerApi {
 
   const applyUpdate = useCallback(async (entries: UpdateOperationEntry[], useAfter: boolean) => {
     if (!entries.length) return;
-    const state = useCanvasStore.getState();
+    const state = (useCanvasStore as any).getState();
     const patches = entries.map((entry) => ({
       id: entry.id,
       patch: useAfter ? entry.after : entry.before,
@@ -110,7 +110,7 @@ export function useUndoManager(): UndoManagerApi {
 
     await Promise.all(patches.map(async ({ id, patch }) => {
       if (!Object.keys(patch).length) return;
-      const latest = useCanvasStore.getState().objects[id];
+      const latest = (useCanvasStore as any).getState().objects[id];
       if (!latest) return;
       try {
         await commitObject({

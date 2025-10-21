@@ -11,7 +11,7 @@ import { useCanvasConnectionStatus } from "@/hooks/useCanvasConnectionStatus";
 import { CanvasSubscriptions } from "@/components/layout/CanvasSubscriptions";
 
 // Dynamic import for CanvasStage to avoid SSR issues with Konva
-const CanvasStage = dynamic(() => import("@/components/CanvasStage"), {
+const CanvasStage = dynamic(() => import("@/components/CanvasStage").then(mod => ({ default: mod.CanvasStage })), {
   ssr: false,
   loading: () => (
     <div className="flex-1 flex items-center justify-center bg-gray-50">
