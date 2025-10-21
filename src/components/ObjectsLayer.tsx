@@ -1,14 +1,19 @@
 "use client";
 
 import { useMemo, useRef, useEffect } from "react";
-import { Layer, Group, Transformer } from "react-konva";
+import dynamic from "next/dynamic";
 import { useCanvasStore } from "@/store";
 import { selectRenderProps } from "@/lib/reconciler";
 import { RectObject } from "@/components/RectObject";
 import { CircleObject } from "@/components/CircleObject";
 import { useCanvasId } from "@/context/CanvasContext";
 import { useCanvasInteractionsContext } from "@/context/CanvasInteractionsContext";
-import { Rect } from "react-konva";
+
+// Dynamic imports for Konva components to avoid SSR issues
+const KonvaLayer = dynamic(() => import("react-konva").then(mod => ({ default: mod.Layer })), { ssr: false });
+const KonvaGroup = dynamic(() => import("react-konva").then(mod => ({ default: mod.Group })), { ssr: false });
+const KonvaTransformer = dynamic(() => import("react-konva").then(mod => ({ default: mod.Transformer })), { ssr: false });
+const KonvaRect = dynamic(() => import("react-konva").then(mod => ({ default: mod.Rect })), { ssr: false });
 
 function ObjectRenderer({ id, registerRef }: { id: string; registerRef: (id: string, node: any | null) => void }) {
   const object = useCanvasStore((s) => s.objects[id]);
@@ -112,13 +117,13 @@ export function ObjectsLayer() {
     await endTransform(id, [obj], { [id]: latest });
   };
   return (
-    <Layer>
-      <Group listening={true}>
+    <KonvaLayer>
+      <KonvaGroup listening={true}>
         {ids.map((id) => (
           <ObjectRenderer key={id} id={id} registerRef={registerRef} />
         ))}
         {selectedIds.length === 1 ? (
-          <Transformer
+          <KonvaTransformer
             ref={transformerRef}
             rotateEnabled={false}
             keepRatio={false}
@@ -149,7 +154,7 @@ export function ObjectsLayer() {
           const h = obj.type === "circle" ? (derivedProps.r ?? 40) * 2 : (derivedProps.h ?? 80);
 
           return (
-            <Rect
+            <KonvaRect
               key={`sel-${id}`}
               x={derivedProps.x - 4}
               y={derivedProps.y - 4}
@@ -162,8 +167,8 @@ export function ObjectsLayer() {
             />
           );
         })}
-      </Group>
-    </Layer>
+      </KonvaGroup>
+    </KonvaLayer>
   );
 }
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useCallback, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import type { Stage as KonvaStageType } from "konva/lib/Stage";
-import { Layer as KonvaLayer, Stage as KonvaStage } from "react-konva";
 import { ObjectsLayer } from "@/components/ObjectsLayer";
 import { cn } from "@/lib/utils";
 import { useCanvasStore } from "@/store";
@@ -10,6 +10,10 @@ import { useCanvasId } from "@/context/CanvasContext";
 import { auth } from "@/lib/firebase";
 import { publishCursor } from "@/lib/rtdbClient";
 import { useCanvasInteractionsContext } from "@/context/CanvasInteractionsContext";
+
+// Dynamic imports for Konva components to avoid SSR issues
+const KonvaLayer = dynamic(() => import("react-konva").then(mod => ({ default: mod.Layer })), { ssr: false });
+const KonvaStage = dynamic(() => import("react-konva").then(mod => ({ default: mod.Stage })), { ssr: false });
 
 export interface CanvasStageProps {
   children?: React.ReactNode;
