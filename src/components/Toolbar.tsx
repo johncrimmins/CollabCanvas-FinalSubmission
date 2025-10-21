@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useCanvasStore } from "@/store";
 
 export interface ToolbarProps {
   activeTool?: string;
@@ -16,6 +17,9 @@ const tools: { id: string; label: string }[] = [
 ];
 
 export function Toolbar({ activeTool = "select", onToolSelect }: ToolbarProps) {
+  const setTool = useCanvasStore((s) => s.setTool);
+  const storeTool = useCanvasStore((s) => s.tool);
+  const current = onToolSelect ? activeTool : storeTool ?? activeTool;
   return (
     <div className="flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/80 px-2 py-1 shadow-sm backdrop-blur dark:border-slate-800/80 dark:bg-slate-900/80">
       {tools.map((tool) => (
@@ -23,14 +27,14 @@ export function Toolbar({ activeTool = "select", onToolSelect }: ToolbarProps) {
           key={tool.id}
           type="button"
           size="sm"
-          variant={activeTool === tool.id ? "default" : "ghost"}
+          variant={current === tool.id ? "default" : "ghost"}
           className={cn(
             "rounded-full px-3",
-            activeTool === tool.id
+            current === tool.id
               ? "shadow-lg shadow-slate-300/40 dark:shadow-slate-900/40"
               : ""
           )}
-          onClick={() => onToolSelect?.(tool.id)}
+          onClick={() => (onToolSelect ? onToolSelect(tool.id) : setTool(tool.id as any))}
         >
           {tool.label}
         </Button>

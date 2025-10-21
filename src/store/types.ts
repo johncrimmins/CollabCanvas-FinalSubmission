@@ -63,6 +63,8 @@ export interface UISlice {
   selectedIds: string[];
   draftTextById: DraftTextState;
   localIntent: LocalIntentState;
+  stagePos: { x: number; y: number };
+  stageScale: number;
   setTool: (tool: CanvasTool) => void;
   setSelectedIds: (ids: string[]) => void;
   clearSelection: () => void;
@@ -73,6 +75,7 @@ export interface UISlice {
   setDraftText: (objectId: string, text: string) => void;
   clearDraftText: (objectId: string) => void;
   resetUI: () => void;
+  setStageTransform: (pos: { x: number; y: number }, scale: number) => void;
 }
 
 export interface PresenceSlice {

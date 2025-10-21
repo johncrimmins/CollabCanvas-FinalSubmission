@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
+// Toaster is rendered inside ProtectedAppShell for authenticated routes
 
 export const metadata: Metadata = {
   title: "CollabCanvas",
   description: "Real-time collaborative canvas for teams",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -16,7 +19,6 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         {children}
-        <Toaster />
       </body>
     </html>
   );

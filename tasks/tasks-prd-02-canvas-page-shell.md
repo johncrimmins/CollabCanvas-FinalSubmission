@@ -53,10 +53,10 @@
   - [x] 4.5 Add `ConnectionIndicator.tsx` showing connection state with accessible status messaging.
   - [x] 4.6 Integrate the placeholders into the canvas page to verify layout spacing and responsive behaviour.
 
-- [ ] 5.0 Document diagnostics, QA checklist, and developer ergonomics
+- [x] 5.0 Document diagnostics, QA checklist, and developer ergonomics
   - [x] 5.1 Implement a development-only debug hook or console group to confirm provider/store initialization.
   - [x] 5.2 Expose a `useCanvasConnectionStatus` helper reading Firestore/RTDB status for QA usage.
-  - [ ] 5.3 Update documentation (e.g., `README` or dedicated doc) with instructions to run and verify the canvas shell.
-  - [ ] 5.4 Produce a manual QA checklist covering authenticated access, loading, error handling, and connection visibility.
+  - [x] 5.3 Update documentation (e.g., `README` or dedicated doc) with instructions to run and verify the canvas shell.
+  - [x] 5.4 Produce a manual QA checklist covering authenticated access, loading, error handling, and connection visibility.
   - [x] 5.5 Add smoke tests or unit tests validating store default state and basic action behaviour (where feasible).
 

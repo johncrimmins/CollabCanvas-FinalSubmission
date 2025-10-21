@@ -19,6 +19,8 @@ export const createUISlice: StateCreator<
   selectedIds: [],
   draftTextById: {},
   localIntent: defaultLocalIntent,
+  stagePos: { x: 0, y: 0 },
+  stageScale: 1,
   setTool: (tool: CanvasTool) => set({ tool }),
   setSelectedIds: (selectedIds: string[]) => set({ selectedIds }),
   clearSelection: () => set({ selectedIds: [] }),
@@ -58,6 +60,11 @@ export const createUISlice: StateCreator<
       selectedIds: [],
       draftTextById: {},
       localIntent: {},
+    }),
+  setStageTransform: (pos, scale) =>
+    set({
+      stagePos: pos,
+      stageScale: scale,
     }),
 });
 

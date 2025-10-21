@@ -1,40 +1,52 @@
 # CollabCanvas — Progress Tracker
 
-## Project Status: Phase 1, Task 1 Complete
+## Phase
+- Current: Phase 1 — Core Collaborative Canvas
+- Next: Phase 1 Step 7 (Resize & Delete)
 
-### Overall Timeline
-- **Current Phase**: Phase 1 Implementation (Core Collaborative Canvas)
-- **Current Task**: Task 1 Complete ✅ - Ready for Task 2
-- **Future Phase**: Phase 2 Implementation (Text & Multi-Select Polish)
+## What’s Done (Highlights)
+- Project setup & Auth (Next.js 15, TS, Tailwind, shadcn/ui, Firebase) — 100%
+- App shell, providers, store slices (`objects`, `ui`, `presence`, `undo`) — 100%
+- Firestore object model, validators, tx commit, objects subscription — 100%
+- CanvasStage with Konva: dynamic sizing, pan/zoom — 100%
+- ObjectsLayer + components (`RectObject`, `CircleObject`) — 100%
+- Presence & cursors (RTDB): publish presence, subscribe presence/cursors/editing/previews, TTL prune — 100%
+- Interactions: toolbar tool state, click-to-create (rect/circle), select and move with localIntent ▷ RTDB previews ▷ Firestore commit — 100%
 
-## Completed Work ✅
+## Phase 1 Task Checklist
+1) Project Setup & Authentication — ✅
+2) Canvas Page Shell — ✅
+3) Basic Object System — ✅
+4) Canvas Rendering — ✅
+   - Konva stage sizing, pan/zoom; per-object components/selectors
+5) Presence & Cursors — ✅
+   - RTDB presence with onDisconnect; cursors/editing/previews subscriptions; TTL prune
+6) Single Object Interactions — ✅ (move)
+   - Tools: select/rectangle/circle; click-to-create; select+drag → preview; commit on end
+   - Note: resize/duplicate/delete to be implemented in Step 7
+7) Resize & Delete — ⏳ next
+8) Undo/Redo — pending
+9) Toolbar & Polish — partial (tool state wired)
+10) Reconnection & Edge Cases — pending
 
-### Phase 1, Task 1: Project Setup & Authentication (100% Complete - 2025-10-21)
-- ✅ **67/67 sub-tasks completed** across 7 task groups
-- ✅ Next.js 15 + TypeScript + Tailwind CSS + shadcn/ui
-- ✅ Firebase SDK integration (Auth, Firestore, RTDB)
-- ✅ Full authentication system (Email/Password + Google OAuth)
-- ✅ Auth guards and protected routes with error handling
-- ✅ Dashboard with Create/Join canvas functionality
-- ✅ Placeholder canvas route structure
-- ✅ Premium UI aesthetic throughout
-- ✅ Comprehensive documentation (5 guides created)
-- ✅ Build successful, no linter errors
-- ✅ All PRD acceptance criteria met
+## Acceptance Criteria (Phase 1 — current status)
+- Auth redirect works — ✅
+- Two browsers can view/edit — ✅ (presence/cursors visible; previews render)
+- Previews smooth; final state persists — ✅ baseline; tuning later
+- No stale editing/preview after disconnect — covered via onDisconnect + TTL (verify in Step 10)
+- Reload restores saved state — baseline via Firestore truth ✅
 
-**Files Created:** 25+ files (~1,500 lines of code)  
-**Documentation:** README.md, FIREBASE-SETUP.md, ENV.md, TESTING-GUIDE.md, IMPLEMENTATION-SUMMARY.md  
-**Status:** Ready for Task 2 - Canvas Page Infrastructure
+## Known Notes
+- Preview throttle/TTL values may need tuning after Step 7.
+- Large selection fan-out strategies are Phase 2.
 
-### Documentation (100% Complete)
-- ✅ Product Requirements Document (PRD)
-  - Objectives and success criteria defined
-  - Scope clearly bounded (in vs out)
-  - User flows documented
-  - Edge cases specified
-  - Acceptance criteria defined
-  - Two-phase implementation plan
-  - Feature details and specs
+## Next Actions
+- Implement Step 7 (Resize & Delete): resize handles + delete/duplicate with preview + safety prompt >25 objs.
+- Add keyboard shortcuts and begin undo/redo slice.
+
+## Links
+- Architecture: see `docs/architecture-overview.md`
+- PRD: see `docs/prd.md`
 
 - ✅ Architecture Overview
   - Data architecture designed (Firestore + RTDB hybrid)
@@ -67,7 +79,7 @@
 
 ### Scope
 - [ ] Authentication system (Email/Password + Google)
-- [ ] Canvas page infrastructure with providers
+- [x] Canvas page infrastructure with providers
 - [ ] Presence system (online users, colored cursors with names)
 - [ ] Basic shapes (rectangle, circle)
 - [ ] Single-select functionality
@@ -96,22 +108,22 @@
 - [x] Create comprehensive documentation (README, setup guides, testing guide)
 - [x] Handle missing Firebase config with helpful error messages
 
-#### 2. Canvas Page Shell (In Progress)
+#### 2. Canvas Page Shell (100% - ✅ COMPLETE)
 - [x] Create app layout with providers (refactored to use reusable layout components)
 - [x] Create canvas route `/canvases/[canvasId]`
 - [x] Initialize Zustand store structure
 - [x] Create store slices: objects, ui, presence, undo
 - [x] Set up reusable layout components (`AuthLoadingScreen`, `AuthErrorScreen`, `ProtectedAppShell`, `ErrorNotice`)
-- [ ] Set up Firebase client wrappers (fsClient, rtdbClient)
-- [ ] Test: Canvas page loads, Firebase connects
+- [x] Set up Firebase client wrappers (fsClient, rtdbClient)
+- [x] Test: Canvas page loads, Firebase connects
 
-#### 3. Basic Object System (0%)
-- [ ] Define Firestore schema for objects
-- [ ] Create Zod validators for object types
-- [ ] Implement `commitObject` with version transaction
-- [ ] Implement `subscribeObjects` with debounced snapshots
-- [ ] Build reconciler with `localIntent ▷ preview ▷ truth` logic
-- [ ] Test: Create object via Firestore, render on canvas
+#### 3. Basic Object System (100% - ✅ COMPLETE)
+- [x] Define Firestore schema for objects
+- [x] Create Zod validators for object types
+- [x] Implement `commitObject` with version transaction
+- [x] Implement `subscribeObjects` with debounced snapshots
+- [x] Build reconciler with `localIntent ▷ preview ▷ truth` logic
+- [x] Test: Create object via Firestore, render on canvas (via subscriptions and optimistic insert helpers)
 
 #### 4. Canvas Rendering (0%)
 - [ ] Implement `CanvasStage.tsx` with Konva

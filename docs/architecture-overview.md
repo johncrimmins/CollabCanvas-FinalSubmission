@@ -82,7 +82,7 @@ src/
   store/
     objects.ts                        // Firestore-truth mirror (Record<objectId, CanvasObject>)
     ui.ts                             // tool, selection, draftTextById, localIntent
-    presence.ts                       // peers, cursors, editing mirrors
+    presence.ts                       // RTDB mirrors
     undo.ts                           // local undo/redo (immer patches, optional persist)
     index.ts                          // create store; combine slices; devtools
 ```
@@ -108,7 +108,6 @@ src/
 `canvases/{canvasId}/cursors/{userId}: { x, y, tool, at }`
 `canvases/{canvasId}/editing/{objectId}/{userId}: { isEditing:true, at }`
 `canvases/{canvasId}/previews/{objectId}: { by, x?, y?, w?, h?, rotation?, seq, at }`
-
 
 ---
 
@@ -182,7 +181,6 @@ flowchart TB
 
 ---
 
-
 ## 8) Public APIs / Interfaces (one-liners, no code)
 
 ### `lib/fsClient.ts`
@@ -249,3 +247,9 @@ flowchart TB
 * **Selectors** per object to keep 60 FPS.
 * **Previews** are throttled, TTL-guarded, and cleaned up with **onDisconnect().remove()**.
 * **IDs** are client-chosen (`nanoid`) for stable optimistic UI.
+
+---
+
+## 10) Anti-patterns (project-specific)
+
+* **Proactive diagnostics overlays/tooling**: Do not build dev-only overlays (e.g., on-canvas diagnostics panels) or telemetry hooks by default. Use browser DevTools during development. Add diagnostics/telemetry only retroactively if we hit major bugs that require extra visibility. This keeps the product/UI surface minimal and prevents accidental client/RSC boundary issues.

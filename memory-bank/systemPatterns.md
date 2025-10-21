@@ -250,23 +250,12 @@ sequenceDiagram
 
 ### Pattern: Reusable Fallback Surfaces (shadcn/ui)
 - Never inline fallback UIs in pages or route layouts; use components under `components/layout/`
-- Compose fallbacks from shadcn/ui primitives (`Card`, `Button`, `Toaster`) for consistency
-- Example: `(app)/layout.tsx` should render `<AuthLoadingScreen/>` or `<AuthErrorScreen/>`, not raw JSX
+- Compose fallbacks from shadcn/ui primitives (`Card`, `Button`) for consistency
 
 ### Pattern: Canvas Stage Composition
 - Use `react-konva` `Stage` + `Layer` and render children via selectors
 - `CanvasStage` accepts `onStageRef`, optional `width`/`height`, and overlays a placeholder when empty
 - Keep Stage-level `listening` minimized; delegate interaction to object components and hooks
-
-### Pattern: Diagnostics (Dev-only)
-- Provide `useCanvasDiagnostics(canvasId)` and an optional `CanvasDiagnosticsPanel` for store snapshots
-- Show diagnostics in a pointer-events-none container over the canvas shell; hide in production builds
-
-### Pattern: Adaptive Throttling
-- Default preview throttle: 80-120ms
-- High-velocity gestures: drop to ~50ms
-- Large multi-select (>50 objects): switch to centroid-only preview
-- Frame-gating: publish at most once per animation frame
 
 ### Pattern: Connection Pooling
 - Single Firestore listener for entire `objects` collection
@@ -328,4 +317,8 @@ Components → Hooks → Store → Lib → Firebase
 - Store slices are independent
 - Cross-slice data access happens via composed selectors
 - Prevents circular dependencies and tight coupling
+
+## Anti-patterns (avoid)
+
+- **Proactive diagnostics overlays/telemetry**: Do not build dev-only overlays (e.g., canvas diagnostics panels) or telemetry by default. Prefer browser DevTools. Add diagnostics **retroactively** only when needed to debug high-severity issues.
 

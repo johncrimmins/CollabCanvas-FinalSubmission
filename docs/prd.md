@@ -39,6 +39,7 @@
 * Keystroke-level text sync.
 * CRDTs or custom conflict resolution beyond per-object version checks.
 * AI features, layers panel, permissions management beyond owner + invited (unless clarified below).
+* Proactive diagnostics overlays/telemetry. Use DevTools; add diagnostics later if severe bugs require it.
 
 ---
 
@@ -217,9 +218,7 @@
 
 ## 8) Telemetry & Debugging Hooks
 
-* Toggle to disable previews (should still function from truth only).
-* Console counters (dev-only): Firestore snapshot latency, RTDB publish rate, dropped previews by TTL/SEQ.
-* Cheap timing markers for pan/zoom and gesture start/end to inspect jank.
+* Out-of-scope initially. Use browser DevTools and ad-hoc logging as needed during development. Add targeted telemetry/diagnostics **retroactively** only if high-severity issues emerge that require deeper visibility.
 
 ---
 
@@ -262,6 +261,7 @@
 * Text editing is reliable and intuitive; peers see editing state and then final text.
 * Multi-select transforms remain smooth and do not blow RTDB budgets.
 * Rotation behaves like move/resize with previews and final save.
+* Shortcuts and toolbar actions mirror each other with no surprises.
 
 ---
 

@@ -11,9 +11,9 @@ export function CanvasProviders({
   children: React.ReactNode;
 }) {
   return (
-    <CanvasIdProvider canvasId={canvasId}>
-      <CanvasStoreProvider>{children}</CanvasStoreProvider>
-    </CanvasIdProvider>
+    <CanvasStoreProvider>
+      <CanvasIdProvider canvasId={canvasId}>{children}</CanvasIdProvider>
+    </CanvasStoreProvider>
   );
 }
 

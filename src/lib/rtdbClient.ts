@@ -5,6 +5,7 @@ import {
   set,
   remove,
   type DatabaseReference,
+  type DatabaseError,
 } from "firebase/database";
 import { rtdb } from "@/lib/firebase";
 import type {
@@ -76,43 +77,50 @@ export function publishPreview(
   onDisconnect(previewRef).remove();
 }
 
+function subscribeScoped<T>(
+  path: string,
+  onChange: (value: T) => void,
+  onError?: (error: DatabaseError) => void
+): Unsubscribe {
+  const target = scopedRef(path);
+  return onValue(
+    target,
+    (snapshot) => {
+      onChange((snapshot.val() ?? {}) as T);
+    },
+    onError
+  );
+}
+
 export function subscribePresence(
   canvasId: string,
-  onChange: (peers: Record<string, PeerPresence>) => void
+  onChange: (peers: Record<string, PeerPresence>) => void,
+  onError?: (error: DatabaseError) => void
 ): Unsubscribe {
-  const presenceRef = scopedRef(`canvases/${canvasId}/presence`);
-  return onValue(presenceRef, (snapshot) => {
-    onChange((snapshot.val() ?? {}) as Record<string, PeerPresence>);
-  });
+  return subscribeScoped(`canvases/${canvasId}/presence`, onChange, onError);
 }
 
 export function subscribeCursors(
   canvasId: string,
-  onChange: (cursors: Record<string, CursorState>) => void
+  onChange: (cursors: Record<string, CursorState>) => void,
+  onError?: (error: DatabaseError) => void
 ): Unsubscribe {
-  const cursorRef = scopedRef(`canvases/${canvasId}/cursors`);
-  return onValue(cursorRef, (snapshot) => {
-    onChange((snapshot.val() ?? {}) as Record<string, CursorState>);
-  });
+  return subscribeScoped(`canvases/${canvasId}/cursors`, onChange, onError);
 }
 
 export function subscribeEditing(
   canvasId: string,
-  onChange: (editing: EditingState) => void
+  onChange: (editing: EditingState) => void,
+  onError?: (error: DatabaseError) => void
 ): Unsubscribe {
-  const editingRef = scopedRef(`canvases/${canvasId}/editing`);
-  return onValue(editingRef, (snapshot) => {
-    onChange((snapshot.val() ?? {}) as EditingState);
-  });
+  return subscribeScoped(`canvases/${canvasId}/editing`, onChange, onError);
 }
 
 export function subscribePreviews(
   canvasId: string,
-  onChange: (previews: PreviewState) => void
+  onChange: (previews: PreviewState) => void,
+  onError?: (error: DatabaseError) => void
 ): Unsubscribe {
-  const previewRef = scopedRef(`canvases/${canvasId}/previews`);
-  return onValue(previewRef, (snapshot) => {
-    onChange((snapshot.val() ?? {}) as PreviewState);
-  });
+  return subscribeScoped(`canvases/${canvasId}/previews`, onChange, onError);
 }
 

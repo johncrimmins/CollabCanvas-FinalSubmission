@@ -126,6 +126,16 @@ Follow the comprehensive testing guide in [`TESTING-GUIDE.md`](./TESTING-GUIDE.m
 5. Visual & UX Quality
 6. Firebase Integration
 
+### Canvas Shell Verification (Task 2)
+
+Follow the manual QA checklist in [`docs/canvas-shell-qa.md`](./docs/canvas-shell-qa.md) to verify the Canvas Page Shell is working:
+
+- Authentication required to access `/(app)/canvases/[canvasId]`
+- Canvas providers mount without errors and Zustand store is initialized
+- Connection indicator reflects RTDB connectivity
+- Diagnostics panel shows object and peer counts
+- Layout renders `Toolbar`, `CanvasStage`, `PresenceLayer`, and status correctly
+
 ---
 
 ## 📁 Project Structure

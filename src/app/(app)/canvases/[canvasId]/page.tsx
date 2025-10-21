@@ -9,6 +9,7 @@ import { PresenceLayer } from "@/components/PresenceLayer";
 import { ConnectionIndicator } from "@/components/ConnectionIndicator";
 import { useCanvasConnectionStatus } from "@/hooks/useCanvasConnectionStatus";
 import { CanvasDiagnosticsRunner } from "@/components/layout/CanvasDiagnosticsRunner";
+import { CanvasSubscriptions } from "@/components/layout/CanvasSubscriptions";
 
 export default function CanvasPage() {
   const params = useParams();
@@ -17,12 +18,13 @@ export default function CanvasPage() {
 
   return (
     <CanvasProviders canvasId={canvasId}>
+      <CanvasSubscriptions canvasId={canvasId} />
       <CanvasLayout
         toolbar={<Toolbar activeTool="select" />}
-        stage={<CanvasStage emptyMessage={`Canvas ${canvasId} is ready for infrastructure wiring`} />}
+        stage={<CanvasStage />}
         presence={<PresenceLayer />}
         status={<ConnectionIndicator isConnected={isConnected} />}
-        diagnostics={<CanvasDiagnosticsRunner canvasId={canvasId} />}
+        diagnostics={null}
       />
     </CanvasProviders>
   );

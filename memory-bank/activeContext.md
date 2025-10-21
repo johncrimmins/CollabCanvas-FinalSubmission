@@ -118,11 +118,11 @@ Following the principle of building foundation first:
 ## Next Steps
 
 ### Immediate (Next Session)
-1. Begin Task 2: Canvas Page Infrastructure
-   - Set up Zustand store structure (objects, ui, presence, undo slices)
-   - Create Firebase client wrappers (fsClient, rtdbClient)
-   - Implement canvas route providers
-   - Test: Canvas page loads, store accessible, Firebase connects
+1. Begin Task 3: Basic Object System (Firestore integration)
+   - Define canvas object schema/types and validators
+   - Implement Firestore commit helper and subscription pipeline
+   - Build reconciler logic for `localIntent ▷ preview ▷ truth`
+   - Test: Create object via Firestore and see it mirror in store
 
 ### Near-Term (Phase 1 Continuation)
 1. Task 3: Basic Object System (Firestore integration)

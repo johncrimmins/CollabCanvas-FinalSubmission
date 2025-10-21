@@ -10,3 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 export function generateCanvasId(length: number = 12): string {
   return nanoid(length)
 }
+
+export function generateObjectId(): string {
+  return `obj-${nanoid(10)}`
+}

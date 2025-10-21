@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { CanvasDiagnosticsPanel } from "@/components/layout/CanvasDiagnosticsPanel";
 
 export function CanvasLayout({
   toolbar,
@@ -36,7 +35,7 @@ export function CanvasLayout({
           <div className="pointer-events-none absolute inset-0">{presence}</div>
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center">
-          {diagnostics ?? <CanvasDiagnosticsPanel />}
+          {diagnostics ?? null}
         </div>
       </main>
     </div>

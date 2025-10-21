@@ -1,4 +1,6 @@
 import { User as FirebaseUser } from "firebase/auth";
+import type { CanvasObject } from "./validators";
+export type { CanvasObject } from "./validators";
 
 // Auth types
 export interface User {
@@ -30,22 +32,5 @@ export interface LoginFormData {
   password: string;
 }
 
-// Canvas types (to be expanded in later tasks)
-export interface CanvasObject {
-  id: string;
-  type: "rect" | "circle" | "text";
-  props: {
-    x: number;
-    y: number;
-    w?: number;
-    h?: number;
-    r?: number;
-    rotation?: number;
-    text?: string;
-    fill?: string;
-  };
-  v: number; // version for optimistic concurrency control
-  updatedBy: string;
-  updatedAt: number;
-}
+// Canvas types imported from validators for convenience
 
