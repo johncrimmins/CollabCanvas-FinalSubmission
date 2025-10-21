@@ -1,0 +1,217 @@
+Description: Core CollabCanvas project rules and patterns
+
+# CollabCanvas Project Rules
+
+## Project Status
+This is CollabCanvas v5 - a **production-ready** collaborative canvas application (final submission for Gauntlet). Never refer to this as an "MVP" - use terms like "production", "phase 1", "core platform", or "production-ready" instead.
+
+## Memory Bank Usage
+**CRITICAL**: At the start of EVERY session, read ALL memory bank files:
+- `memory-bank/projectbrief.md` - Project foundation
+- `memory-bank/productContext.md` - Product vision  
+- `memory-bank/systemPatterns.md` - Architecture patterns
+- `memory-bank/techContext.md` - Tech stack details
+- `memory-bank/activeContext.md` - Current work focus
+- `memory-bank/progress.md` - Progress tracker
+
+The memory bank is the single source of truth for understanding this project. Never start work without reading it.
+
+## Architectural Principles (LOCKED)
+
+### 1. Render Priority Pattern
+Always apply this cascade when rendering objects:
+```
+localIntent ▷ preview ▷ truth
+```
+- `localIntent`: Actor's in-flight changes (instant, local-only)
+- `preview`: Peer's in-flight changes from RTDB (smooth, ephemeral)
+- `truth`: Firestore snapshot (authoritative, debounced 16-33ms)
+
+### 2. Hybrid Firebase Architecture
+- **Firestore**: Durable object storage, per-object transactions, version checking
+- **RTDB**: Ephemeral signals only (cursors, presence, editing, previews)
+- **Never** store object data in RTDB
+- **Never** use Firestore for ephemeral signals
+
+### 3. Final-Only Text Editing
+- Text edits commit on Enter or blur only
+- No keystroke-level synchronization
+- Show "editing" indicator while user is typing
+- Broadcast final text only after commit
+
+### 4. Local-First State Management
+- Use Zustand with immer middleware
+- UI reads from local store via selectors
+- Optimistic updates happen immediately
+- Firebase writes happen asynchronously
+
+### 5. Version-Based Conflict Resolution
+- Every Firestore object has a version number (`v`)
+- All writes use transactions: `if (v == expectedV) { v++; update(); }`
+- Last-write-wins on conflicts (explicit, predictable)
+- No CRDTs or complex operational transforms
+
+## Code Organization Rules
+
+### Directory Structure (MUST FOLLOW)
+```
+src/
+  app/                    # Next.js App Router routes only
+  components/             # UI components (presentation)
+  hooks/                  # Business logic and side effects
+  lib/                    # Stateless utilities and Firebase clients
+  store/                  # Zustand slices
+```
+
+### Dependency Flow (Unidirectional)
+```
+Components → Hooks → Store → Lib → Firebase
+```
+- Components never call lib directly (must go through hooks)
+- Hooks encapsulate all store mutations
+- Lib contains only stateless utilities
+- No circular dependencies between layers
+
+### File Naming Conventions
+- Components: PascalCase (e.g., `CanvasStage.tsx`)
+- Hooks: camelCase with `use` prefix (e.g., `useCanvasInteractions.ts`)
+- Lib utilities: camelCase (e.g., `fsClient.ts`, `reconciler.ts`)
+- Store slices: camelCase (e.g., `objects.ts`, `presence.ts`)
+
+## Performance Rules
+
+### 1. Selective Re-rendering
+- Use Zustand selectors to subscribe to specific state slices
+- Each Konva object component selects only its own render props
+- Never trigger full canvas re-render unless absolutely necessary
+
+### 2. Throttling & Debouncing
+- **Preview publishing**: 80-120ms default throttle, adaptive to velocity
+- **Firestore snapshots**: 16-33ms debounce to prevent flicker
+- **Cursor updates**: Throttle to match animation frames
+
+### 3. Cleanup Discipline
+- Always use `onDisconnect().remove()` for RTDB ephemeral data
+- Clean up listeners when components unmount
+- Clear localIntent when gestures complete
+
+## Data Validation Rules
+
+### Always Validate Firebase Data
+- Use Zod schemas for all Firestore documents
+- Validate RTDB payloads before applying to store
+- Fail gracefully on schema violations (log error, ignore bad data)
+- Never trust incoming data without validation
+
+## Testing Approach
+
+### Manual Testing Scenarios (Phase 1)
+Before marking Phase 1 complete, test:
+1. Two browsers editing simultaneously
+2. Refresh during drag operation
+3. Network disconnect and reconnect
+4. Simultaneous edit on same object
+5. Version conflict scenarios
+
+### Acceptance Criteria (Must Pass)
+- Auth redirects work correctly
+- Presence/cursors visible within ~100ms
+- Previews render smoothly during transforms
+- No stale editing/preview markers after disconnect
+- Canvas reload restores saved state
+
+## Common Pitfalls to Avoid
+
+### ❌ Don't Do This
+- Store object data in RTDB (only Firestore)
+- Skip version checking in Firestore writes
+- Broadcast text while user is typing
+- Apply Firestore snapshots without debounce during drags
+- Forget `onDisconnect()` cleanup
+- Call Firebase APIs directly from components
+- Use Redux or Context API (we use Zustand)
+- Use Next.js Pages Router (we use App Router)
+
+### ✅ Do This
+- Store objects in Firestore with version field
+- Use per-object transactions for all writes
+- Commit text only on blur/Enter
+- Debounce Firestore snapshots 16-33ms
+- Register `onDisconnect().remove()` for all ephemeral RTDB paths
+- Firebase operations go through lib/fsClient.ts or lib/rtdbClient.ts
+- Use Zustand for state management
+- Use Next.js App Router
+
+## Phase-Based Development
+
+### Current Phase: Pre-Implementation
+See `memory-bank/activeContext.md` for current work focus.
+
+### Phase 1 Scope (Core Collaborative Canvas)
+- Auth, presence, cursors
+- Basic shapes (rect, circle)
+- Single-select, move, resize
+- Delete, duplicate
+- Undo/redo (local)
+- Preview system via RTDB
+- Reconnection handling
+
+### Phase 2 Scope (Future)
+- Text objects with inline editor
+- Multi-select (marquee + shift-click)
+- Rotation handles
+- Adaptive preview throttling for large selections
+
+## Technology Decisions (LOCKED)
+
+### Framework & Tooling
+- Next.js 14+ with App Router (not Pages Router)
+- TypeScript (strict mode)
+- Tailwind CSS + shadcn/ui
+- Konva.js + react-konva for canvas
+- Zustand + immer for state
+
+### Firebase Stack
+- Firebase Auth (Email/Password + Google)
+- Cloud Firestore (objects only)
+- Realtime Database (signals only)
+- No Cloud Functions (client-side only)
+
+### Deployment
+- Vercel (primary target)
+- Firebase Hosting (alternative)
+
+## Communication Standards
+
+### User-Facing Language
+- Use friendly, minimal error messages
+- Connection status should be clear and unobtrusive
+- No technical jargon in UI text
+
+### Code Comments
+- Explain "why" not "what"
+- Document non-obvious performance optimizations
+- Reference memory bank or PRD for complex behaviors
+
+## Git Workflow
+- Never force push to main/master
+- Never skip hooks without user approval
+- Never commit without explicit user request
+- Descriptive commit messages
+
+## Questions to Ask
+When unsure about implementation details:
+1. Check memory bank first
+2. Reference PRD (`docs/prd.md`) for product questions
+3. Reference Architecture doc (`docs/architecture-overview.md`) for technical questions
+4. Ask user if documentation is unclear or contradictory
+
+## Success Mindset
+This is a **final submission project** for Gauntlet. Prioritize:
+- ✅ Quality over speed
+- ✅ Meeting all acceptance criteria
+- ✅ Following documented patterns exactly
+- ✅ Reliability and data integrity
+- ✅ Smooth collaborative UX
+
+The architecture is designed; implementation should faithfully execute the design.
